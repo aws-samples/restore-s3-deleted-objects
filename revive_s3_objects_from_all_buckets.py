@@ -13,19 +13,26 @@ logger = logging.getLogger(__name__)
 
 utc=pytz.UTC
 
+list_all_restored_objects = False
 
 
-session = boto3.session.Session(profile_name='s3-accidental-delete')
-s3 = session.resource('s3')
+s3 = boto3.resource('s3')
 
 
-# s3 = boto3.resource('s3')
-
-
-# TODO: replace date and time accordingly
+#TODO: replace date and time accordingly
+# Syntax:
 # datetime(year, month, day, hour, minute, second, microsecond, UTC-00:00)
-point_of_restore = datetime.datetime(2022, 5, 6, 16, 0, 0, 0, pytz.UTC)
+# Example:
+# point_of_restore = datetime.datetime(2022, 5, 6, 16, 0, 0, 0, pytz.UTC)
 
+try:
+    logger.info("Variable point_of_restore has been set as %s", point_of_restore)
+except:
+    logger.error("Please, set point_of_restore before running this script")
+    raise
+
+global count        
+count = 0
 
 
 def revive_object(bucket, object_key):
@@ -56,7 +63,12 @@ def revive_object(bucket, object_key):
             
                 obj = bucket.Object(object_key)
                 obj.Version(latest_version['VersionId']).delete()
-                logger.warning("Revived %s", object_key)
+                
+                global count
+                count += 1
+                
+                if list_all_restored_objects:
+                    logger.warning("Revived %s", object_key)
             else:
                 logger.info("Object was deleted before point of restore. Activation will NOT continue for object %s ",
                            object_key)
@@ -78,38 +90,40 @@ for bucket in buckets['Buckets']:
     bucket = s3.Bucket(bucket_name)        
     
     logger.warning("Processing of bucket %s has started.", bucket_name)
-	
+
     bucket_versioning = s3.meta.client.get_bucket_versioning(Bucket=bucket_name)
 
     if 'Status' in bucket_versioning:
     
-    	is_trunckated = True
-    	next_key_marker = ""
-    	next_version_id_marker = ""
-    	
-    	while is_trunckated:
-    		
-    		if next_key_marker:
-    		
-    			all_objects = s3.meta.client.list_object_versions(Bucket=bucket.name, KeyMarker=next_key_marker, VersionIdMarker = next_version_id_marker)
-    			
-    		else:
-    		
-    			all_objects = s3.meta.client.list_object_versions(Bucket=bucket.name)
-    			
-    		all_versions = all_objects['Versions']
-    		
-    		for version in all_versions:
-    			if not version['IsLatest']:
-    				revive_object(bucket, version['Key'])
-    				
-    		is_trunckated = all_objects['IsTruncated']
-    		if is_trunckated:
-    			next_key_marker = all_objects['NextKeyMarker']
-    			next_version_id_marker = all_objects['NextVersionIdMarker']
-    			
-    	logger.warning("Processing of bucket %s has been completed.", bucket_name)
+        is_trunckated = True
+        next_key_marker = ""
+        next_version_id_marker = ""
+    
+        while is_trunckated:
+    
+            if next_key_marker:
+    
+                all_objects = s3.meta.client.list_object_versions(Bucket=bucket.name, KeyMarker=next_key_marker, VersionIdMarker = next_version_id_marker)
+    
+            else:
+    
+                all_objects = s3.meta.client.list_object_versions(Bucket=bucket.name)
+    
+            if 'Versions' in all_objects:
+                all_versions = all_objects['Versions']
+
+                for version in all_versions:
+                    if not version['IsLatest']:
+                        revive_object(bucket, version['Key'])
+
+            is_trunckated = all_objects['IsTruncated']
+            if is_trunckated:
+                next_key_marker = all_objects['NextKeyMarker']
+                next_version_id_marker = all_objects['NextVersionIdMarker']
+
+        logger.warning("Processing of bucket %s has been completed. %d files have been restored", bucket_name, count)
+        count = 0
 
     else:
-    	logger.warning("Bucket %s does not have versioning enabled.", bucket_name)
+        logger.warning("Bucket %s does not have versioning enabled.", bucket_name)
 
