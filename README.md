@@ -27,7 +27,8 @@ There are a few options to run this script. We describe two possibilities below:
 
 ##### 1) If you have access to the AWS console
 a. Access [AWS Cloud Shell](https://console.aws.amazon.com/cloudshell/home)
-    - For more information on AWS Cloud Shell: https://aws.amazon.com/cloudshell/
+    For more information on AWS Cloud Shell: https://aws.amazon.com/cloudshell/
+    
 b. Clone this GitHub repository
 
     git clone https://github.com/aws-samples/restore-s3-deleted-objects
@@ -42,6 +43,7 @@ d. Logs will show up as the script runs
 
 ##### 2) If you have access key and secret key credentials:
 a.  If you have AWS CLI configured, you may skip this. Otherwise, [configure AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) in a command line tool/terminal. 
+
 b.  Clone this GitHub repository
 
     git clone https://github.com/aws-samples/restore-s3-deleted-objects
@@ -55,6 +57,10 @@ d. Logs will show up as the script runs
 ---
 ### Costs
 This script executes requests made against Amazon S3 buckets and files, like GET, LIST, and PUT. Costs will vary depending on how many objects and buckets a customer is restoring. For more details on Amazon S3 pricing, take a look at [Amazon S3 pricing page](https://aws.amazon.com/s3/pricing/)
+---
+### Disclaimer
+
+This script is for information purposes only and should not be used for production workloads. 
 ---
 ## Security
 
