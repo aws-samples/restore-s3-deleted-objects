@@ -1,3 +1,7 @@
+[Restore accidentally deleted files from Amazon S3](#1---English-Version)
+[Restaure arquivos acidentalmente apagados do Amazon S3](#2---Portuguese-Version)
+
+
 ## Restore accidentally deleted files from Amazon S3
 
 ### When should you use this script?
@@ -59,6 +63,12 @@ d. Logs will show up as the script runs
 ### Costs
 
 This script executes requests made against Amazon S3 buckets and files, like GET, LIST, and PUT. Costs will vary depending on how many objects and buckets a customer is restoring. For more details on Amazon S3 pricing, take a look at [Amazon S3 pricing page](https://aws.amazon.com/s3/pricing/)
+
+
+---
+## Restaure arquivos acidentalmente apagados do Amazon S3
+
+TBD
 
 ---
 ### Disclaimer
