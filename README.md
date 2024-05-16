@@ -1,8 +1,8 @@
-[Restore accidentally deleted files from Amazon S3](#1---English-Version)
-[Restaure arquivos acidentalmente apagados do Amazon S3](#2---Portuguese-Version)
+[1 - Restore accidentally deleted files from Amazon S3](#1---Restore-accidentally-deleted-files-from-Amazon-S3)
+[2 - Restaure arquivos acidentalmente apagados do Amazon S3](#2---Restaure-arquivos-acidentalmente-apagados-do-Amazon-S3)
 
 
-## Restore accidentally deleted files from Amazon S3
+## 1 - Restore accidentally deleted files from Amazon S3
 
 ### When should you use this script?
 
@@ -66,7 +66,7 @@ This script executes requests made against Amazon S3 buckets and files, like GET
 
 
 ---
-## Restaure arquivos acidentalmente apagados do Amazon S3
+## 2 - Restaure arquivos acidentalmente apagados do Amazon S3
 
 TBD
 
